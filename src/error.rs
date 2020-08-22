@@ -1,5 +1,3 @@
-
-
 use core::fmt::{self, Debug, Display};
 use embedded_hal::blocking::spi::Transfer;
 use embedded_hal::digital::OutputPin;
@@ -23,12 +21,8 @@ pub enum Error<SPI: Transfer<u8>, GPIO: OutputPin> {
     /// Device is not the correct type.
     InvalidDevice,
 
-    /// Status register contained unexpected flags.
-    ///
-    /// This can happen when the chip is faulty, incorrectly connected, or the
-    /// driver wasn't constructed or destructed properly (eg. while there is
-    /// still a write in progress).
-    UnexpectedStatus,
+    /// Device does not support the mode of operation selected
+    InvalidMode,
 
     #[doc(hidden)]
     __NonExhaustive(private::Private),
@@ -44,7 +38,7 @@ where
             Error::Spi(spi) => write!(f, "Error::Spi({:?})", spi),
             Error::Gpio(gpio) => write!(f, "Error::Gpio({:?})", gpio),
             Error::InvalidDevice => f.write_str("Error::InvalidDevice"),
-            Error::UnexpectedStatus => f.write_str("Error::UnexpectedStatus"),
+            Error::InvalidMode => f.write_str("Error::InvalidMode"),
             Error::__NonExhaustive(_) => unreachable!(),
         }
     }
@@ -59,8 +53,10 @@ where
         match self {
             Error::Spi(spi) => write!(f, "SPI error: {}", spi),
             Error::Gpio(gpio) => write!(f, "GPIO error: {}", gpio),
-            Error::InvalidDevice => f.write_str("Error::InvalidDevice"),
-            Error::UnexpectedStatus => f.write_str("unexpected value in status register"),
+            Error::InvalidDevice => {
+                f.write_str("This is not the correct device for the driver or it is faulty")
+            }
+            Error::InvalidMode => f.write_str("The driver or device is not in the correct mode"),
             Error::__NonExhaustive(_) => unreachable!(),
         }
     }

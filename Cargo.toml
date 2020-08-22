@@ -4,8 +4,7 @@ version = "0.1.0"
 authors = ["tlostroh"]
 edition = "2018"
 description = "Platform-agnostic Rust driver for the ESP-PSRAM64 serial pseudo SRAM devices"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+keywords = ["nostd", "embedded-hal" , "ram" , "driver"]
 
 [dependencies]
 embedded-hal = {path = "../embedded-hal"}
