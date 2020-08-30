@@ -306,7 +306,7 @@ impl<SPI: Transfer<u8>, CS: OutputPin> StorageSize<u8, u32> for PSRAM<SPI, CS> {
     }
 
     /// 1KB
-    fn try_page_size(&mut self) -> nb::Result<AddressOffset<u32>, Self::Error> {
+    fn try_page_size(&mut self, _address: Address<u32>) -> nb::Result<AddressOffset<u32>, Self::Error> {
         Ok(AddressOffset(1024))
     }
 }
